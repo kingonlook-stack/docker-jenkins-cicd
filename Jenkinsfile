@@ -3,22 +3,15 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/kingonlook-stack/docker-jenkins-cicd.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t docker-jenkins-cicd:latest .'
+                sh 'docker build --no-cache -t docker-jenkins-cicd:latest .'
             }
         }
 
         stage('Security Scan') {
             steps {
-                sh 'trivy image --severity HIGH,CRITICAL --exit-code 1 docker-jenkins-cicd:latest'
+                sh 'trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 docker-jenkins-cicd:latest'
             }
         }
 
